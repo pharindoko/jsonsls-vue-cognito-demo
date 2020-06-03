@@ -1,0 +1,85 @@
+{
+  "_from": "json-serverless-template@^1.5.37",
+  "_id": "json-serverless-template@1.5.37",
+  "_inBundle": false,
+  "_integrity": "sha512-Exl/gHRNBA0i/SFrMHNV3xiW/BXM5Kq//LRcoIFO45AvOP70i10gYvbs0hzks8Tpj5st/gF/uhigL1Ji5gj/1w==",
+  "_location": "/json-serverless/json-serverless-template",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "json-serverless-template@^1.5.37",
+    "name": "json-serverless-template",
+    "escapedName": "json-serverless-template",
+    "rawSpec": "^1.5.37",
+    "saveSpec": null,
+    "fetchSpec": "^1.5.37"
+  },
+  "_requiredBy": [
+    "/json-serverless"
+  ],
+  "_resolved": "https://registry.npmjs.org/json-serverless-template/-/json-serverless-template-1.5.37.tgz",
+  "_shasum": "771ca06ec230c3b46ceed000e02d03b3b571e68d",
+  "_spec": "json-serverless-template@^1.5.37",
+  "_where": "/usr/local/lib/node_modules/json-serverless",
+  "author": {
+    "name": "pharindoko"
+  },
+  "bugs": {
+    "url": "https://github.com/pharindoko/json-serverless/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "cognito-express": "^2.0.16",
+    "express": "4.17.1",
+    "json-serverless-lib": "^1.5.37",
+    "serverless-http": "^2.3.2"
+  },
+  "deprecated": false,
+  "description": "fun",
+  "devDependencies": {
+    "@types/express": "4.17.6",
+    "@types/express-serve-static-core": "4.17.5",
+    "@types/node": "10.17.13",
+    "copy-webpack-plugin": "5.1.1",
+    "lerna": "3.20.2",
+    "node-env-webpack-plugin": "1.1.0",
+    "nodemon": "2.0.3",
+    "nodemon-webpack-plugin": "4.0.8",
+    "serverless": "1.70.1",
+    "serverless-cloudside-plugin": "^1.0.3",
+    "serverless-domain-manager": "^4.1.1",
+    "serverless-offline": "6.1.5",
+    "ts-loader": "7.0.4",
+    "ts-node": "8.8.2",
+    "typescript": "3.7.5",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.7",
+    "webpack-node-externals": "1.7.2"
+  },
+  "files": [
+    "/src",
+    "/dist",
+    "/config",
+    "serverless.yml",
+    "webpack.config.js",
+    "tsconfig.json",
+    "package.json",
+    "package-lock.json"
+  ],
+  "gitHead": "c2c82a8183a84e7414f9417cc3be558b08dd5549",
+  "homepage": "https://github.com/pharindoko/json-serverless",
+  "license": "MIT",
+  "main": "src/handler.ts",
+  "name": "fun",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pharindoko/json-serverless.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "deploy": "npm run build && sls deploy",
+    "start": "npm run build && sls offline cloudside"
+  },
+  "version": "1.5.37"
+}

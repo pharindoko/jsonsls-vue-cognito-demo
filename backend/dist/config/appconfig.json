@@ -1,0 +1,8 @@
+{
+  "readOnly": false,
+  "enableApiKeyAuth": false,
+  "jsonFile": "/Users/uid10804/fun/backend/db.json",
+  "enableJSONValidation": true,
+  "enableSwagger": true,
+  "stackName": "fun"
+}
