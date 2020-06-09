@@ -29,12 +29,8 @@ custom:
     apiType: rest
   file: ${file(./config/serverlessconfig.json)}
   appconfig: ${file(./config/appconfig.json)}
-  custom:
   serverless-offline:
     resourceRoutes: true
-  webpack:
-    includeModules: true
-    packager: "npm"
 provider:
   stage: ${opt:stage, 'dev'}
   name: aws
