@@ -1,6 +1,12 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import express from "express";
 import serverlessHttp from "serverless-http";
+import AWS from "aws-sdk"; // To set the AWS credentials and AWS Region.
+
+AWS.config.update({
+  region: "eu-central-1",
+});
+
 const CognitoExpress = require("cognito-express");
 import {
   AppConfig,
@@ -12,7 +18,10 @@ import {
   FileStorageAdapter,
 } from "json-serverless-lib";
 
-import fs from "fs";
+import fs, { readFileSync } from "fs";
+import { DynamoDBLowDBAdapter } from "./dynamodb-lowdb-adapter";
+import { DynamoDBStorageAdapter } from "./dynamoStorageAdapter";
+import { Helpers } from "./Helpers";
 
 const server = express();
 
@@ -21,7 +30,7 @@ console.log(
   "process.env.cognitoUserPoolId: " +
     JSON.stringify(process.env.COGNITO_USER_POOL_ID)
 );
-
+/* 
 const cognitoExpress = new CognitoExpress({
   region: process.env.region,
   cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
@@ -61,7 +70,7 @@ server.use((req: any, res: any, next: any) => {
   } else {
     next();
   }
-});
+}); */
 
 const sls = serverlessHttp(server);
 const defaultConfig = new AppConfig();
@@ -76,23 +85,15 @@ const swagger = new Swagger(
 );
 let core: CoreApp | undefined;
 console.log("environment: " + process.env.NODE_ENV);
-if (process.env.IS_OFFLINE) {
-  core = new CoreApp(
-    appConfig,
-    server,
-    new FileStorageAdapter("db.json"),
-    swagger,
-    environment
-  );
-} else {
-  core = new CoreApp(
-    appConfig,
-    server,
-    new S3StorageAdapter(environment.s3Bucket, environment.s3File),
-    swagger,
-    environment
-  );
-}
+console.log("is offline: " + process.env.IS_OFFLINE);
+
+core = new CoreApp(
+  appConfig,
+  server,
+  new DynamoDBStorageAdapter("testff", 115, Helpers.readFileSync("db.json")),
+  swagger,
+  environment
+);
 
 const init = async () => {
   return new Promise(async (resolve, reject) => {
