@@ -1,8 +1,8 @@
 {
   "readOnly": false,
   "enableApiKeyAuth": false,
-  "jsonFile": "/Users/uid10804/fun/backend/db.json",
+  "jsonFile": "db.json",
   "enableJSONValidation": true,
   "enableSwagger": true,
-  "stackName": "fun"
+  "stackName": "jsonsls-vue"
 }
