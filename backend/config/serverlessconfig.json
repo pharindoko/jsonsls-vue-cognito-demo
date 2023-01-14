@@ -2,6 +2,6 @@
   "s3File": "db.json",
   "s3Bucket": "jsonsls-${self:service}-${self:provider.stage}",
   "basePath": "/dev",
-  "stage": "dev",
-  "awsRegion": "eu-central-1"
+  "stage": "${self:provider.stage}",
+  "awsRegion": "us-east-1"
 }
