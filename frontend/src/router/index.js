@@ -51,7 +51,7 @@ export default new VueRouter({
       beforeEnter(to, from, next) {
         var currUrl = window.location.href;
 
-        //console.log(currUrl);
+        //console.log(`${currUrl}`);
         auth.auth.parseCognitoWebResponse(currUrl);
         //next();
       },

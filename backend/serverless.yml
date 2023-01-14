@@ -5,31 +5,36 @@
 # uses to deploy your code to your provider of choice
 
 # The `service` block is the name of the service
-service:
-  name: ${self:custom.appconfig.stackName}
+service: ${self:custom.appconfig.stackName}
 plugins:
-  - serverless-cloudside-plugin
   - serverless-offline
-
 package:
   individually: false
   excludeDevDependencies: true
-  include:
+  patterns:
+    - 'node_modules/**'
+    - '!node_modules/aws-sdk/**'
     - config/
     - dist/
-    - node_modules/
 custom:
   file: ${file(./config/serverlessconfig.json)}
   appconfig: ${file(./config/appconfig.json)}
+  custom:
   serverless-offline:
     resourceRoutes: true
+    useChildProcesses: true
+  webpack:
+    includeModules: true
+    packager: 'npm'
+  region: ${self:custom.file.awsRegion, 'eu-central-1'}
 provider:
-  stage: ${opt:stage, 'dev'}
+  stage: ${self:custom.file.stage, 'dev'}
   name: aws
   runtime: nodejs12.x
-  region: ${self:custom.file.awsRegion, 'eu-central-1'}
+  region: ${self:custom.region}
+  stackName: ${self:custom.appconfig.stackName}
   stackTags: # Tags that will be added to each of the deployment resources
-    jsonsls: ${self:custom.file.stackName}
+    jsonsls: ${self:custom.appconfig.stackName}
   environment:
     NODE_ENV: ${self:provider.stage}
     s3Bucket: ${self:custom.file.s3Bucket}
@@ -38,22 +43,28 @@ provider:
     COGNITO_USER_POOL_ID:
       Ref: CognitoUserPool
     region: ${self:provider.region}
-
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
   apiGateway: # Optional API Gateway global config
+    shouldStartNameWithService: true
     binaryMediaTypes: # Optional binary media types the API might return
-      - "*/*"
-  apiKeys:
-    - ${self:service}.${self:provider.stage}
-  iamRoleStatements:
-    - Effect: "Allow"
-      Action:
-        - "s3:*"
-      Resource: "*"
-    - Effect: "Allow"
-      Action:
-        - "s3:*"
-      Resource:
-        - "arn:aws:s3:::${self:custom.file.s3Bucket}/*"
+      - '*/*'
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 's3:*'
+          Resource:
+            - '*'
+        - Effect: 'Allow'
+          Action:
+            - 's3:*'
+          Resource:
+            - 'arn:aws:s3:::${self:custom.file.s3Bucket}/*'
+        - Effect: 'Allow'
+          Action:
+            - 'ssm:GetParameter'
+          Resource: '*'
 
 # The `functions` block defines what code to deploy
 functions:
@@ -67,7 +78,7 @@ functions:
           method: ANY
           private: ${self:custom.appconfig.enableApiKeyAuth}
           cors:
-            origin: "*" # <-- Specify allowed origin
+            origin: '*' # <-- Specify allowed origin
             headers: # <-- Specify allowed headers
               - Content-Type
               - X-Amz-Date
@@ -77,11 +88,11 @@ functions:
               - X-Amz-User-Agent
             allowCredentials: false
       - http:
-          path: "{proxy+}"
+          path: '{proxy+}'
           method: ANY
           private: ${self:custom.appconfig.enableApiKeyAuth}
           cors:
-            origin: "*" # <-- Specify allowed origin
+            origin: '*' # <-- Specify allowed origin
             headers: # <-- Specify allowed headers
               - Content-Type
               - X-Amz-Date
@@ -115,7 +126,7 @@ resources:
         UserPoolId:
           Ref: CognitoUserPool
         ExplicitAuthFlows:
-          - ADMIN_NO_SRP_AUTH
+          - ALLOW_USER_PASSWORD_AUTH
         GenerateSecret: false
 
   # Print out the Id of the User Pool that is created
